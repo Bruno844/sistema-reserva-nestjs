@@ -1,7 +1,11 @@
 import { Cliente } from "src/cliente/entities/cliente.entity";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
-
+export enum ParcelaStatus {
+    PENDIENTE = 'PENDIENTE',
+    OCUPADA = 'OCUPADA',
+    LIBRE = 'LIBRE'
+}
 
 @Entity('parcelas')
 export class Parcela {
@@ -10,17 +14,26 @@ export class Parcela {
     id: number;
 
     @Column({
-        type: 'integer',
+        type: 'varchar',
         nullable: false,
-        unique: true
+        length: 50
+    })
+    nombreParcela: string;
+
+    @Column({
+        type: 'uuid',
+        nullable: false,
+        unique: true,
+        generated: 'uuid'
     })
     codigoUnico: number;
 
     @Column({
-        type: 'bool',
-        default: false
+        type: 'enum',
+        enum: ParcelaStatus,
+        default: ParcelaStatus.PENDIENTE
     })
-    estado: boolean;
+    estado: ParcelaStatus;
 
 
     //muchos a uno, muchas parcelas puede tener un cliente
